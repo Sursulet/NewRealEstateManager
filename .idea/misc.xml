@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/drawable/layout_border.xml" value="0.2703125" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout-land/main_content.xml" value="0.25" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/add_edit_activity.xml" value="0.25" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/add_edit_fragment.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/detail_activity.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/detail_fragment.xml" value="0.4" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/gallery_activity.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/gallery_fragment.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/header_drawer.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/loan_activity.xml" value="0.21203703703703702" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/loan_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/main_activity.xml" value="0.21203703703703702" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/main_content.xml" value="0.25" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/main_fragment.xml" value="0.21203703703703702" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/maps_activity.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/maps_fragment.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/photo_dialog_fragment.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/photo_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/real_estate_item.xml" value="0.264" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/search_activity.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/layout/search_fragment.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/menu/drawer_menu.xml" value="0.25" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/menu/main_menu.xml" value="0.25" />
+        <entry key="..\:/Users/sursu/AndroidStudioProjects/OC/P9/RealEstateManager/app/src/main/res/menu/save_menu.xml" value="0.25416666666666665" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

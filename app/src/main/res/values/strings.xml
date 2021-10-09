@@ -1,0 +1,89 @@
+<resources>
+    <string name="app_name">Real Estate Manager</string>
+
+    <!-- Main Menu -->
+    <string name="action_add">Add</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_search">Search</string>
+
+    <string name="content_description_add">Open add form</string>
+    <string name="content_description_edit">Open edit form</string>
+    <string name="content_description_search">Open search form</string>
+
+    <!-- Drawer Menu -->
+    <string name="action_maps">Maps</string>
+    <string name="action_loan">Loan</string>
+
+    <!-- Header Drawer -->
+    <string name="header_title">Loan</string>
+    <string name="header_text">Loan</string>
+
+    <!-- Detail -->
+    <string name="detail_title">Detail</string>
+    <string name="media_title">Media</string>
+    <string name="description_title">Description</string>
+    <string name="location_title">Location</string>
+    <string name="surface_title">Surface</string>
+    <string name="number_of_rooms_title">Number of rooms</string>
+    <string name="number_of_bathrooms_title">Number of bathrooms</string>
+    <string name="number_of_bedrooms_title">Number of bedrooms</string>
+
+    <!-- Add Edit -->
+    <string name="add_edit_title">Add Real Estate</string>
+    <string name="add_edit_add_photos">Add Photos</string>
+
+    <!-- Gallery -->
+    <string name="gallery_title">Gallery</string>
+
+    <!-- Search -->
+    <string name="search_title">Search</string>
+
+    <!-- Maps -->
+    <string name="maps_title">Maps</string>
+
+    <!-- Loan -->
+    <string name="loan_title">Loan</string>
+    <string name="contribution_label">Contribution</string>
+    <string name="years_label">Years</string>
+    <string name="rate_label">Rate</string>
+    <string name="loan_calculate">Calculate</string>
+
+    <!-- Input -->
+    <string name="type_label">Type</string>
+    <string name="price_label">Price</string>
+    <string name="surface_label">Surface</string>
+    <string name="rooms_label">Rooms</string>
+    <string name="bathrooms_label">Bathrooms</string>
+    <string name="bedrooms_label">Bedrooms</string>
+    <string name="description_label">Description</string>
+    <string name="extras_label">Extras</string>
+    <string name="agent_label">Agent</string>
+    <string name="search_label">Search</string>
+    <string name="price_min_label">Price Min.</string>
+    <string name="surface_min_label">Surface Min.</string>
+    <string name="price_max_label">Price Max.</string>
+    <string name="surface_max_label">Surface Max.</string>
+    <string name="empty_text"> </string>
+    <string name="photos_title">Photos</string>
+    <string name="un">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five_and_more">5+</string>
+
+    <!-- Permission -->
+    <string name="permission_granted">Permission granted</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="permission_required">Permission required</string>
+    <string name="ok">OK</string>
+    <string name="street_label">Street</string>
+    <string name="post_code_label">Post Code</string>
+    <string name="city_label">City</string>
+    <string name="state_label">State</string>
+    <string name="country_label">Country</string>
+    <string name="nearest_label">Nearest</string>
+    <string name="title_label">Titre</string>
+    <string name="save">Save</string>
+    <string name="open_dialog">Open Dialog Add Photo</string>
+
+</resources>

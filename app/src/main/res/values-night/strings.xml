@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loan_title">Loan</string>
+    <string name="contribution_label">Contribution</string>
+    <string name="action_loan">Loan</string>
+    <string name="permission_granted">Permission granted</string>
+</resources>

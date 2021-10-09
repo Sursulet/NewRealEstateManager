@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_maps"
+            android:icon="@drawable/ic_baseline_map_24"
+            android:title="@string/action_maps"
+            android:checked="true" />
+        <item
+            android:id="@+id/action_loan"
+            android:icon="@drawable/ic_baseline_attach_money_24"
+            android:title="@string/action_loan" />
+    </group>
+
+</menu>
