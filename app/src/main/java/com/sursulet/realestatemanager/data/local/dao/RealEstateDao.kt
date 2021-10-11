@@ -30,14 +30,14 @@ interface RealEstateDao {
     suspend fun update(realEstate: RealEstate)
 
     @Transaction
-    @Query("SELECT * FROM realestate WHERE type LIKE '%' || :type || '%' AND city LIKE '%' || :zone || '%' AND price > :minPrice AND price < :maxPrice AND created >= :release AND isAvailable LIKE '%' || :isAvailable || '%' AND surface > :minSurface AND surface < :maxSurface AND nearest LIKE '%' || :nearest || '%' AND EXISTS (SELECT COUNT(*) FROM photo WHERE photo.realEstateId = realestate.id GROUP BY realEstateId HAVING COUNT(*) >= :size)")
+    @Query("SELECT * FROM realestate WHERE type LIKE '%' || :type || '%' AND city LIKE '%' || :city || '%' AND price > :minPrice AND price < :maxPrice AND isAvailable = :isAvailable AND created >= :date AND surface > :minSurface AND surface < :maxSurface AND nearest LIKE '%' || :nearest || '%' AND EXISTS (SELECT COUNT(*) FROM photo WHERE photo.realEstateId = realestate.id GROUP BY realEstateId HAVING COUNT(*) >= :size)")
     fun search(
         type: String,
-        zone: String,
+        city: String,
         minPrice: Float,
         maxPrice: Float,
-        release: LocalDate?,
         isAvailable: Boolean,
+        date: LocalDate?,
         minSurface: Int,
         maxSurface: Int,
         nearest: String,

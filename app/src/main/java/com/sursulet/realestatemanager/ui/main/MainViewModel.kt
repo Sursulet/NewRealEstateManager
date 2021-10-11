@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sursulet.realestatemanager.di.IoDispatcher
 import com.sursulet.realestatemanager.repository.NetworkRepository
+import com.sursulet.realestatemanager.repository.shared.RealEstateIdRepository
+import com.sursulet.realestatemanager.repository.shared.TwoPaneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,7 +19,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
-    private val networkRepository: NetworkRepository
+    private val twoPaneRepository: TwoPaneRepository,
+    private val networkRepository: NetworkRepository,
+    private val realEstateIdRepository: RealEstateIdRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainState())
@@ -38,6 +42,7 @@ class MainViewModel @Inject constructor(
     fun onEvent(event: MainEvent) {
         when (event) {
             is MainEvent.TwoPaneScreen -> {
+                twoPaneRepository.setValue(twoPane = true)
                 _uiState.update { it.copy(isTwoPane = true) }
             }
             is MainEvent.Detail -> {
@@ -52,6 +57,7 @@ class MainViewModel @Inject constructor(
             }
             is MainEvent.Add -> {
                 _uiState.update { it.copy(isDetailVisible = false) }
+                realEstateIdRepository.setValue(null)
                 viewModelScope.launch {
                     if (uiState.value.isTwoPane) {
                         _navigation.trySend(MainNavigation.AddEditFragment)

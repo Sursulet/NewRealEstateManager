@@ -5,7 +5,9 @@ import android.os.Bundle
 import com.sursulet.realestatemanager.R
 import com.sursulet.realestatemanager.databinding.GalleryActivityBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class GalleryActivity : AppCompatActivity() {
 

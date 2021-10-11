@@ -1,8 +1,7 @@
 package com.sursulet.realestatemanager.ui.gallery
 
 sealed class GalleryNavigation {
-    object MainActivity : GalleryNavigation()
-    object MainFragment: GalleryNavigation()
-    object DetailActivity : GalleryNavigation()
-    object DetailFragment : GalleryNavigation()
+    object Cancel : GalleryNavigation()
+    object CloseFragment : GalleryNavigation()
+    data class EmptyGallery(val value: String = "you must enter at least one photo before leaving") : GalleryNavigation()
 }

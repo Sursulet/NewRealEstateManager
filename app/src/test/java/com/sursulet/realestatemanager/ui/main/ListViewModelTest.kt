@@ -51,7 +51,6 @@ class ListViewModelTest {
             country = "France",
             state = ""
         ),
-        isAvailable = true,
         agent = "Peach"
     )
 
@@ -68,10 +67,9 @@ class ListViewModelTest {
             street = "7 rue Linois",
             postCode = "75015",
             city = "Paris",
-            country = "France",
-            state = ""
+            country = "France"
         ),
-        isAvailable = false,
+        sold = LocalDate.parse("2021-06-06"),
         agent = "Peach"
     )
 
@@ -108,7 +106,7 @@ class ListViewModelTest {
     @Before
     fun setUp() {
 
-        every { searchQueryRepository.searchQuery } returns MutableStateFlow(null)
+        every { searchQueryRepository.searchQuery } returns MutableStateFlow(SearchQuery())
         every { realEstateIdRepository.setValue(1) } returns Unit
         every { realEstateRepository.getRealEstatesWithPhotos() } returns flowOf(
             listOf(
@@ -161,7 +159,7 @@ class ListViewModelTest {
                 0.0f,
                 3.4028235E38f,
                 LocalDate.parse("1970-01-01"),
-                true,
+                null,
                 0,
                 2147483647,
                 "",

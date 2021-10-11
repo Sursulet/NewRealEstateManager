@@ -63,16 +63,8 @@ class PhotoDialogFragment : DialogFragment() {
             actionTakeAPhoto.setOnClickListener { takePhoto.launch() }
             actionPickAPhoto.setOnClickListener { getContent.launch("image/*") }
 
-            photoTitle.editText?.apply {
-
-                doOnTextChanged { text, _, _, _ ->
-                    text?.let { setSelection(it.length) }
-                    viewModel.onEvent(
-                        PhotoEvent.Title(
-                            text.toString()
-                        )
-                    )
-                }
+            photoTitle.editText?.doOnTextChanged { text, _, _, _ ->
+                viewModel.onEvent(PhotoEvent.Title(text.toString()))
             }
         }
 
@@ -87,7 +79,9 @@ class PhotoDialogFragment : DialogFragment() {
             viewModel.uiState.collect { state ->
                 binding.apply {
                     glide.load(state.image).centerCrop().into(photoImage)
-                    photoTitle.editText?.setText(state.title)
+                    if (state.title != photoTitle.editText?.text.toString()) {
+                        photoTitle.editText?.setText(state.title)
+                    }
                     photoTitle.error = state.errorTitle
                 }
             }

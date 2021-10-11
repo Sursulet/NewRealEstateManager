@@ -4,9 +4,9 @@ import androidx.room.ColumnInfo
 
 data class Address(
     val street: String,
-    val extras: String? = null,
-    val state: String,
-    val city: String,
+    val extras: String = "",
     @ColumnInfo(name = "post_code") val postCode: String,
+    val city: String,
+    val state: String = "",
     val country: String
 )

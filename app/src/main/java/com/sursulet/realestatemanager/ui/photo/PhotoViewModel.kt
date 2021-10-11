@@ -90,7 +90,7 @@ class PhotoViewModel @Inject constructor(
                 Photo(
                     title = uiState.value.title,
                     image = uiState.value.image!!,
-                    realEstateId = 2//uiState.value.realEstateId
+                    realEstateId = uiState.value.realEstateId
                 )
             createPhoto(newPhoto)
         }

@@ -18,6 +18,12 @@
     <string name="header_title">Loan</string>
     <string name="header_text">Loan</string>
 
+    <!-- Main -->
+    <string name="cancel_search_label">Cancel search</string>
+    <string name="cancel_search_dialog_title">Cancel search</string>
+    <string name="supporting_text">Do you want to cancel the search?</string>
+    <string name="cancel">Cancel</string>
+
     <!-- Detail -->
     <string name="detail_title">Detail</string>
     <string name="media_title">Media</string>
@@ -50,6 +56,7 @@
 
     <!-- Input -->
     <string name="type_label">Type</string>
+    <string name="available_label">Available</string>
     <string name="price_label">Price</string>
     <string name="surface_label">Surface</string>
     <string name="rooms_label">Rooms</string>
@@ -82,6 +89,8 @@
     <string name="state_label">State</string>
     <string name="country_label">Country</string>
     <string name="nearest_label">Nearest</string>
+    <string name="period_label">Period</string>
+    <string name="unit_label">Number</string>
     <string name="title_label">Titre</string>
     <string name="save">Save</string>
     <string name="open_dialog">Open Dialog Add Photo</string>

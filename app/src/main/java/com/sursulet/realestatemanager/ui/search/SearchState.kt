@@ -1,8 +1,10 @@
 package com.sursulet.realestatemanager.ui.search
 
 data class SearchState(
+    val isTwoPane: Boolean = false,
     val type: String = "",
-    val available:Boolean = false,
+    val available: Boolean = true,
+    val phrase: String = "All properties available",
     val minPrice: String = "",
     val maxPrice: String = "",
     val maxSurface: String = "",

@@ -31,34 +31,45 @@ class ListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(dispatcher) {
-            searchQueryRepository.searchQuery.flatMapLatest { query: SearchQuery? ->
-                if (query != null) {
-                    realEstateRepository.search(
-                        query.type,
-                        query.zone,
-                        query.minPrice,
-                        query.maxPrice,
-                        query.release,
-                        query.status,
-                        query.minSurface,
-                        query.maxSurface,
-                        query.nearest,
-                        query.nbPhotos
+            searchQueryRepository.searchQuery.flatMapLatest { query: SearchQuery ->
+                //if (query != SearchQuery()) {
+
+                    val search = realEstateRepository.search(
+                        type = query.type,
+                        city = query.zone,
+                        minPrice = query.minPrice,
+                        maxPrice = query.maxPrice,
+                        isAvailable = query.isAvailable,
+                        date = query.date,
+                        minSurface = query.minSurface,
+                        maxSurface = query.maxSurface,
+                        nearest = query.nearest,
+                        size = query.nbPhotos
                     )
-                } else realEstateRepository.getRealEstatesWithPhotos()
+                    _uiState.update { it.copy(searchQuery = query) }
+                    search
+
+
+                //} else {
+                    //Log.d(TAG, "ListVM: No Query")
+                    //_uiState.update { it.copy(searchQuery = null) }
+                    //realEstateRepository.getRealEstatesWithPhotos().map { list ->
+                    //    list.filter { it.photos != emptyList<Photo>() }
+                    //}
+                //}
             }.map { estates ->
-                    estates.map {
-                        RealEstateUiModel(
-                            it.realEstate.id,
-                            it.photos[0].image,
-                            it.realEstate.address.city,
-                            it.realEstate.type,
-                            it.realEstate.price.toString()
-                        )
-                    }
-                }.collect { state ->
-                    _uiState.update { it.copy(list = state) }
+                estates.map {
+                    RealEstateUiModel(
+                        it.realEstate.id,
+                        it.photos[0].image,
+                        it.realEstate.address.city,
+                        it.realEstate.type,
+                        it.realEstate.price.toString()
+                    )
                 }
+            }.collect { state ->
+                _uiState.update { it.copy(list = state) }
+            }
         }
     }
 
@@ -81,6 +92,10 @@ class ListViewModel @Inject constructor(
                 }
 
                 realEstateIdRepository.setValue(event.value)
+            }
+            is ListEvent.Search -> {
+                searchQueryRepository.setValue(SearchQuery())
+                _uiState.update { it.copy(searchQuery = null) }
             }
         }
     }

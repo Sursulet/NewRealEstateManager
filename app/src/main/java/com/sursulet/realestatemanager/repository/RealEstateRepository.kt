@@ -19,22 +19,22 @@ class RealEstateRepository @Inject constructor(
     suspend fun update(realEstate: RealEstate) = dao.update(realEstate)
     fun search(
         type: String,
-        zone: String,
+        city: String,
         minPrice: Float,
         maxPrice: Float,
-        release: LocalDate?,
         isAvailable: Boolean,
+        date: LocalDate,
         minSurface: Int,
         maxSurface: Int,
         nearest: String,
         size: Int
     ) = dao.search(
         type = type,
-        zone = zone,
+        city = city,
         minPrice = minPrice,
         maxPrice = maxPrice,
-        release = release,
         isAvailable = isAvailable,
+        date = date,
         minSurface = minSurface,
         maxSurface = maxSurface,
         nearest = nearest,

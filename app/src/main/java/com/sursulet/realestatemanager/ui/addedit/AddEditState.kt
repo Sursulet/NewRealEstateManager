@@ -20,9 +20,10 @@ data class AddEditState(
     val postCode : String = "",
     val country : String = "",
     val nearest: String = "",
-    val isAvailable: Boolean = false,
+    val isAvailable: Boolean = true,
     val created: String = "",
     val sold: String = "",
     val agent: String = "",
+    val isSave: Boolean = false,
     val error: AddEditError = AddEditError()
 )

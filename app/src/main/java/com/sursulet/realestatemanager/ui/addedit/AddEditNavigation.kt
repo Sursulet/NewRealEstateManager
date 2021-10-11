@@ -1,6 +1,7 @@
 package com.sursulet.realestatemanager.ui.addedit
 
 sealed class AddEditNavigation {
-    object GalleryActivity : AddEditNavigation()
-    object GalleryFragment : AddEditNavigation()
+    object DetailActivity : AddEditNavigation()
+    object DetailFragment : AddEditNavigation()
+    object GalleryDialogFragment : AddEditNavigation()
 }

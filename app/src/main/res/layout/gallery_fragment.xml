@@ -23,26 +23,21 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gallery_recyclerview"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layoutMnager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:spanCount="4"
+        tools:layoutMnager="androidx.recyclerview.widget.GridLayoutManager"
         tools:listitem="@layout/photo_item"
-        tools:orientation="vertical" />
+        tools:spanCount="4" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/action_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
         android:contentDescription="@string/open_dialog"
-        android:src="@drawable/ic_baseline_add_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:src="@drawable/ic_baseline_add_24" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

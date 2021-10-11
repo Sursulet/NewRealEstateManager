@@ -1,19 +1,23 @@
 package com.sursulet.realestatemanager.ui.search
 
-import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.chip.Chip
+import com.sursulet.realestatemanager.R
 import com.sursulet.realestatemanager.databinding.SearchFragmentBinding
 import com.sursulet.realestatemanager.utils.Constants.PERIODS
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -37,10 +41,37 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                binding.apply {
+                    searchIsAvailable.text = state.phrase
+                    searchPeriodNumber.error = state.error.nbTime
+                    searchPeriod.error = state.error.unitTime
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigation.collect { action ->
+                when (action) {
+                    is SearchNavigation.MainActivity -> {
+                        requireActivity().finish()
+                    }
+                    is SearchNavigation.MainFragment -> {
+                        requireActivity().supportFragmentManager.beginTransaction().remove(this@SearchFragment).commit()
+                    }
+                }
+            }
+        }
+
         binding.apply {
+            actionSearch.setOnClickListener { viewModel.onEvent(SearchEvent.OnSearch) }
+
             val adapter =
-                ArrayAdapter(requireContext(), R.layout.simple_list_item_1, PERIODS)
+                ArrayAdapter(requireContext(), R.layout.list_item, PERIODS)
             (searchPeriod.editText as? AutoCompleteTextView)?.setAdapter(adapter)
+
+            searchPeriod.editText?.addTextChangedListener { viewModel.onEvent(SearchEvent.UnitTime(it.toString())) }
 
             searchIsAvailable.setOnCheckedChangeListener { _, isChecked ->
                 viewModel.onEvent(SearchEvent.Available(isChecked))
@@ -85,46 +116,22 @@ class SearchFragment : Fragment() {
                     viewModel.onEvent(SearchEvent.MaxSurface(text.toString()))
                 }
             }
-            searchStreet.editText?.apply {
-                doOnTextChanged { text, _, _, _ ->
-                    text?.let { setSelection(it.length) }
-                    viewModel.onEvent(SearchEvent.Street(text.toString()))
-                }
-            }
-            searchExtras.editText?.apply {
-                doOnTextChanged { text, _, _, _ ->
-                    text?.let { setSelection(it.length) }
-                    viewModel.onEvent(SearchEvent.Extras(text.toString()))
-                }
-            }
-            searchPostCode.editText?.apply {
-                doOnTextChanged { text, _, _, _ ->
-                    text?.let { setSelection(it.length) }
-                    viewModel.onEvent(SearchEvent.PostCode(text.toString()))
-                }
-            }
             searchCity.editText?.apply {
                 doOnTextChanged { text, _, _, _ ->
                     text?.let { setSelection(it.length) }
                     viewModel.onEvent(SearchEvent.City(text.toString()))
                 }
             }
-            searchState.editText?.apply {
-                doOnTextChanged { text, _, _, _ ->
-                    text?.let { setSelection(it.length) }
-                    viewModel.onEvent(SearchEvent.State(text.toString()))
-                }
-            }
-            searchCountry.editText?.apply {
-                doOnTextChanged { text, _, _, _ ->
-                    text?.let { setSelection(it.length) }
-                    viewModel.onEvent(SearchEvent.Country(text.toString()))
-                }
-            }
             searchNearest.editText?.apply {
                 doOnTextChanged { text, _, _, _ ->
                     text?.let { setSelection(it.length) }
                     viewModel.onEvent(SearchEvent.Nearest(text.toString()))
+                }
+            }
+            searchPeriodNumber.editText?.apply {
+                doOnTextChanged { text, _, _, _ ->
+                    text?.let { setSelection(it.length) }
+                    viewModel.onEvent(SearchEvent.NumberTime(text.toString()))
                 }
             }
         }

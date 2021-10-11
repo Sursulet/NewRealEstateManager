@@ -9,9 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.sursulet.realestatemanager.R
 import com.sursulet.realestatemanager.databinding.MainFragmentBinding
 import com.sursulet.realestatemanager.ui.adapters.RealEstateAdapter
+import com.sursulet.realestatemanager.ui.search.SearchQuery
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -36,7 +40,7 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let{
+        arguments?.let {
             val result = it.getBoolean("twoPane")
             viewModel.onEvent(ListEvent.TwoPane(result))
         }
@@ -58,9 +62,23 @@ class MainFragment : Fragment() {
             setFragmentResult("requestKey", bundleOf("bundleKey" to it))
         }
 
+        binding.actionCancelSearch.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage(resources.getString(R.string.supporting_text))
+                .setNeutralButton(resources.getString(R.string.cancel)) { dialog, _ ->
+                    dialog.cancel()
+                }
+                .setPositiveButton(resources.getString(R.string.ok)) { _, _ ->
+                    viewModel.onEvent(ListEvent.Search)
+                }
+                .show()
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.collect {
-                list.submitList(it.list)
+            viewModel.uiState.collect { state ->
+                list.submitList(state.list)
+                binding.actionCancelSearch.visibility =
+                    if (state.searchQuery != SearchQuery()) View.VISIBLE else View.GONE
             }
         }
     }
@@ -74,6 +92,7 @@ class MainFragment : Fragment() {
         binding.mainRecyclerview.apply {
             adapter = list
             layoutManager = LinearLayoutManager(requireContext())
+            addItemDecoration(DividerItemDecoration(requireContext(),LinearLayoutManager.VERTICAL))
         }
     }
 }

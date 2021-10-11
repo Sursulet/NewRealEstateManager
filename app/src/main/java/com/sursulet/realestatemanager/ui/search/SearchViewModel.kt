@@ -1,23 +1,41 @@
 package com.sursulet.realestatemanager.ui.search
 
 import androidx.lifecycle.ViewModel
-import com.sursulet.realestatemanager.data.local.model.Address
+import androidx.lifecycle.viewModelScope
+import com.sursulet.realestatemanager.di.IoDispatcher
 import com.sursulet.realestatemanager.repository.shared.SearchQueryRepository
+import com.sursulet.realestatemanager.repository.shared.TwoPaneRepository
 import com.sursulet.realestatemanager.utils.Others.calculatePeriod
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    private val twoPaneRepository: TwoPaneRepository,
     private val searchQueryRepository: SearchQueryRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchState())
     val uiState = _uiState.asStateFlow()
+
+    private val _navigation = Channel<SearchNavigation>(capacity = Channel.CONFLATED)
+    val navigation = _navigation.receiveAsFlow()
+        .shareIn(viewModelScope.plus(dispatcher), SharingStarted.WhileSubscribed())
+
+    init {
+        viewModelScope.launch {
+            twoPaneRepository.twoPane.collect { twoPane ->
+                _uiState.update { it.copy(isTwoPane = twoPane) }
+            }
+        }
+    }
 
     fun onEvent(event: SearchEvent) {
         when (event) {
@@ -26,15 +44,14 @@ class SearchViewModel @Inject constructor(
             }
             is SearchEvent.Available -> {
                 _uiState.update { it.copy(available = event.value) }
+                getDate(
+                    number = uiState.value.nbTime,
+                    period = uiState.value.unitTime,
+                    available = event.value
+                )
             }
             is SearchEvent.City -> {
                 _uiState.update { it.copy(city = event.value) }
-            }
-            is SearchEvent.Country -> {
-                _uiState.update { it.copy(country = event.value) }
-            }
-            is SearchEvent.Extras -> {
-                _uiState.update { it.copy(extras = event.value) }
             }
             is SearchEvent.MaxPrice -> {
                 _uiState.update { it.copy(maxPrice = event.value) }
@@ -51,45 +68,36 @@ class SearchViewModel @Inject constructor(
             is SearchEvent.Nearest -> {
                 _uiState.update { it.copy(nearest = event.value) }
             }
-            is SearchEvent.PostCode -> {
-                _uiState.update { it.copy(postCode = event.value) }
-            }
-            is SearchEvent.State -> {
-                _uiState.update { it.copy(state = event.value) }
-            }
-            is SearchEvent.Street -> {
-                _uiState.update { it.copy(street = event.value) }
-            }
             is SearchEvent.Type -> {
                 _uiState.update { it.copy(type = event.value) }
             }
             is SearchEvent.NumberTime -> {
+                getDate(
+                    number = event.value,
+                    period = uiState.value.unitTime,
+                    available = uiState.value.available
+                )
                 _uiState.update { it.copy(nbTime = event.value) }
             }
             is SearchEvent.UnitTime -> {
+                getDate(
+                    period = event.value,
+                    number = uiState.value.nbTime,
+                    available = uiState.value.available
+                )
                 _uiState.update { it.copy(unitTime = event.value) }
             }
             SearchEvent.OnSearch -> {
                 _uiState.update {
                     it.copy(
                         error = it.error.copy(
-                            minPrice = if (it.minPrice.isBlank() && it.maxPrice.isNotBlank()) "Minimum price is Empty, Enter a number" else null,
-                            maxPrice = if (it.minPrice.isNotBlank() && it.maxPrice.isBlank()) "Maximum price is Empty, Enter a number" else null,
-                            minSurface = if (it.minSurface.isBlank() && it.maxSurface.isNotBlank()) "Minimum surface is Empty, Enter a number" else null,
-                            maxSurface = if (it.minSurface.isNotBlank() && it.maxSurface.isBlank()) "Maximum surface is Empty, Enter a number" else null,
                             nbTime = if (it.nbTime.isBlank() && it.unitTime.isNotBlank()) "Number is Empty, Enter a number for the period" else null,
-                            unitTime = if (it.unitTime.isBlank() && it.nbTime.isNotBlank()) "Unit time is empty, Choose one" else null,
-                            city = if (it.city.isBlank() && it.country.isNotBlank() && it.extras.isNotBlank() && it.postCode.isNotBlank() && it.state.isNotBlank() && it.street.isNotBlank()) "City price is Empty, Enter a city" else null,
-                            country = if (it.country.isBlank() && it.city.isNotBlank() && it.extras.isNotBlank() && it.postCode.isNotBlank() && it.state.isNotBlank() && it.street.isNotBlank()) "Country price is Empty, Enter a number" else null,
-                            //extras = if (it.extras.isBlank() && it.city.isNotBlank() && it.country.isNotBlank() && it.postCode.isNotBlank() && it.state.isNotBlank() && it.street.isNotBlank()) "Extras price is Empty, Enter a number" else null,
-                            postCode = if (it.postCode.isBlank() && it.city.isNotBlank() && it.country.isNotBlank() && it.extras.isNotBlank() && it.state.isNotBlank() && it.street.isNotBlank()) "PostCode price is Empty, Enter a number" else null,
-                            state = if (it.state.isBlank() && it.city.isNotBlank() && it.country.isNotBlank() && it.extras.isNotBlank() && it.postCode.isNotBlank() && it.street.isNotBlank()) "State price is Empty, Enter a number" else null,
-                            street = if (it.street.isBlank() && it.city.isNotBlank() && it.country.isNotBlank() && it.extras.isNotBlank() && it.postCode.isNotBlank() && it.state.isNotBlank()) "Street price is Empty, Enter a number" else null,
+                            unitTime = if (it.unitTime.isBlank() && it.nbTime.isNotBlank()) "Unit time is empty, Choose one" else null
                         )
                     )
                 }
 
-                if (uiState.value.error != SearchError(null, null, null, null, null, null)) return
+                if (uiState.value.error != SearchError(null, null)) return
 
                 search()
             }
@@ -97,39 +105,47 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun search() {
-        val address = uiState.value.let {
-            Address(
-                street = it.street,
-                extras = it.extras,
-                state = it.state,
-                city = it.city,
-                postCode = it.postCode,
-                country = it.country
-            )
-        }
 
         val period =
             if (uiState.value.unitTime.isBlank() && uiState.value.nbTime.isBlank()) LocalDate.parse("1970-01-01")
-            else calculatePeriod(uiState.value.unitTime.toLong(), uiState.value.nbTime)
-        val release = if (uiState.value.available.not()) period else LocalDate.parse("1970-01-01")
+            else calculatePeriod(uiState.value.nbTime.toLong(), uiState.value.unitTime)
+
+        var created = LocalDate.parse("1970-01-01")
+        var sold: LocalDate? = null
+
+        if (uiState.value.available.not()) created = period else sold = period
 
         val newSearchQuery = SearchQuery(
             type = uiState.value.type,
-            zone = address.city,
+            zone = uiState.value.city,
             minPrice = uiState.value.minPrice.toFloatOrNull() ?: 0f,
             maxPrice = uiState.value.maxPrice.toFloatOrNull() ?: Float.MAX_VALUE,
-            release = release,
-            status = uiState.value.available,
+            isAvailable = uiState.value.available,
+            date = period,
             minSurface = uiState.value.minSurface.toIntOrNull() ?: 0,
             maxSurface = uiState.value.maxSurface.toIntOrNull() ?: Int.MAX_VALUE,
             nearest = uiState.value.nearest,
             nbPhotos = uiState.value.nbPhotos.filter { it.isDigit() }.toIntOrNull() ?: 1
         )
 
-        search(newSearchQuery)
+        searchQueryRepository.setValue(newSearchQuery)
+
+        if (uiState.value.isTwoPane) {
+            _navigation.trySend(SearchNavigation.MainFragment)
+        } else {
+            _navigation.trySend(SearchNavigation.MainActivity)
+        }
     }
 
-    private fun search(searchQuery: SearchQuery) {
-        searchQueryRepository.setCurrent(searchQuery)
+    private fun getDate(period: String, number: String, available: Boolean) {
+
+        if (period.isBlank() || number.isBlank()) {
+            _uiState.update { it.copy(phrase = if (available) "All Properties available" else "All Properties sold") }
+            return
+        }
+        if (period.isNotBlank() && number.isNotBlank()) {
+            val date = calculatePeriod(number = number.toLong(), time = period)
+            _uiState.update { it.copy(phrase = if (available) " Properties available since $date" else "Property sold since $date") }
+        }
     }
 }

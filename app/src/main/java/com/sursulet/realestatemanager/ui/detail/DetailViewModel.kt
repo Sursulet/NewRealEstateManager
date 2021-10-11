@@ -46,8 +46,8 @@ class DetailViewModel @Inject constructor(
                         description = estate.realEstate.description,
                         surface = estate.realEstate.surface.toString(),
                         rooms = estate.realEstate.rooms.toString(),
-                        bathrooms = estate.realEstate.bathrooms.toString(),
-                        bedrooms = estate.realEstate.bedrooms.toString(),
+                        bathrooms = estate.realEstate.bathrooms?.toString() ?: "",
+                        bedrooms = estate.realEstate.bedrooms?.toString() ?: "",
                         location = addressString,
                         coordinates = Location(48.866667,2.333333)
                     )

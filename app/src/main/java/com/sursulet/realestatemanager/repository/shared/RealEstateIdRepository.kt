@@ -11,7 +11,7 @@ class RealEstateIdRepository @Inject constructor() {
     private val _realEstateId = MutableStateFlow<Long?>(null)
     val realEstateId = _realEstateId.asStateFlow()
 
-    fun setValue(newId: Long) {
+    fun setValue(newId: Long?) {
         _realEstateId.value = newId
     }
 }

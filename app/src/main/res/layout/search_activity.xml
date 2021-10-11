@@ -20,25 +20,10 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
         <androidx.fragment.app.FragmentContainerView
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/search_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/search_fragment" />
-    </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/extended_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin"
-        android:layout_gravity="bottom|end"
-        android:contentDescription="@string/content_description_search"
-        android:text="@string/action_search"
-        app:icon="@drawable/ic_baseline_search_24"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

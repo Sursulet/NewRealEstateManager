@@ -10,12 +10,14 @@ import com.sursulet.realestatemanager.repository.shared.TwoPaneRepository
 import com.sursulet.realestatemanager.ui.adapters.PhotoUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
     @IoDispatcher dispatcher: CoroutineDispatcher,
@@ -28,20 +30,22 @@ class GalleryViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(GalleryState())
     val uiState = _uiState.asStateFlow()
 
-    private val _navigation = Channel<String>(capacity = Channel.CONFLATED)
+    private val _navigation = Channel<GalleryNavigation>(capacity = Channel.CONFLATED)
     val navigation = _navigation.receiveAsFlow()
         .shareIn(viewModelScope.plus(dispatcher), SharingStarted.WhileSubscribed())
 
+
     init {
-        viewModelScope.launch(dispatcher) {
-            realEstateIdRepository.realEstateId.filterNotNull().flatMapLatest {
-                photoRepository.getPhotos(it)
-            }.map { photos ->
-                photos.map {
-                    PhotoUiModel(id = it.id, title = it.title, image = it.image)
-                }
+
+        viewModelScope.launch {
+            realEstateIdRepository.realEstateId.filterNotNull().flatMapLatest { id ->
+                photoRepository.getPhotos(id)
             }.combine(twoPaneRepository.twoPane) { photos, twoPane ->
-                _uiState.update { it.copy(isTwoPane = twoPane, photos = photos) }
+                GalleryState(isTwoPane = twoPane, photos = photos.map {
+                    PhotoUiModel(id = it.id, title = it.title, image = it.image)
+                })
+            }.collect {
+                _uiState.value = it
             }
         }
     }
@@ -51,23 +55,13 @@ class GalleryViewModel @Inject constructor(
             is GalleryEvent.OnEdit -> {
                 lastPhotoRepository.setValue(event.photo)
             }
+            is GalleryEvent.OnClose -> {
+                if (uiState.value.photos.isEmpty()) _navigation.trySend(GalleryNavigation.Cancel)
+                else _navigation.trySend(GalleryNavigation.CloseFragment)
+            }
             GalleryEvent.OnSave -> {
-                /*
-                if (uiState.value.isTwoPane) {
-                    if (uiState.value.id != null) {
-                        _navigation.trySend(GalleryNavigation.DetailFragment)
-                    } else {
-                        _navigation.trySend(GalleryNavigation.MainFragment)
-                    }
-                } else {
-                    if (uiState.value.id != null) {
-                        _navigation.trySend(GalleryNavigation.DetailActivity)
-                    } else {
-                        _navigation.trySend(GalleryNavigation.MainActivity)
-                    }
-                }
-
-                 */
+                if (uiState.value.photos.isEmpty()) _navigation.trySend(GalleryNavigation.EmptyGallery())
+                else _navigation.trySend(GalleryNavigation.CloseFragment)
             }
         }
     }

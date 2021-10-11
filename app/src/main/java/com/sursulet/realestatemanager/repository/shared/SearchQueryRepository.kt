@@ -10,10 +10,10 @@ import javax.inject.Singleton
 @Singleton
 class SearchQueryRepository @Inject constructor() {
 
-    private val _searchQuery = MutableStateFlow<SearchQuery?>(null)
-    val searchQuery: Flow<SearchQuery?> = _searchQuery.asStateFlow()
+    private val _searchQuery = MutableStateFlow(SearchQuery())
+    val searchQuery = _searchQuery.asStateFlow()
 
-    fun setCurrent(query: SearchQuery) {
+    fun setValue(query: SearchQuery) {
         _searchQuery.value = query
     }
 }

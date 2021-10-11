@@ -5,21 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sursulet.realestatemanager.R
 import com.sursulet.realestatemanager.databinding.GalleryFragmentBinding
 import com.sursulet.realestatemanager.ui.adapters.PhotoAdapter
 import com.sursulet.realestatemanager.ui.photo.PhotoDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class GalleryFragment : DialogFragment() {
 
@@ -44,16 +47,13 @@ class GalleryFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
-        galleryAdapter.setOnItemClickListener {
-            viewModel.onEvent(GalleryEvent.OnEdit(it))
-            showDialog()
-        }
+
+
 
         binding.apply {
             toolbar.apply {
-                setNavigationOnClickListener { dismiss() }
-                title = "Add Photo"
+                setNavigationOnClickListener { viewModel.onEvent(GalleryEvent.OnClose) }
+                title = "Gallery"
                 inflateMenu(R.menu.save_menu)
                 isEnabled = false
                 setOnMenuItemClickListener {
@@ -63,31 +63,43 @@ class GalleryFragment : DialogFragment() {
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.navigation.collect {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                requireActivity().finish()
-            }
-        }
-
         binding.apply {
             actionAdd.setOnClickListener { showDialog() }
-
-            galleryRecyclerview.apply {
-                adapter = galleryAdapter
-                layoutManager = GridLayoutManager(requireContext(), 4)
-            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.collect {
-                galleryAdapter.submitList(it.photos)
+            viewModel.uiState.collect { state ->
+                setupRecyclerView(state.isTwoPane)
+                galleryAdapter.submitList(state.photos)
             }
         }
 
         galleryAdapter.setOnItemClickListener {
             viewModel.onEvent(GalleryEvent.OnEdit(it))
             showDialog()
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigation.collect { action ->
+                when (action) {
+                    GalleryNavigation.CloseFragment -> {
+                        setFragmentResult("isSaveRequest", bundleOf("isSaveBundle" to true))
+                        dismiss()
+                    }
+                    GalleryNavigation.Cancel -> {
+                        setFragmentResult("isSaveRequest", bundleOf("isSaveBundle" to false))
+                        dismiss()
+                    }
+                    is GalleryNavigation.EmptyGallery -> {
+                        MaterialAlertDialogBuilder(requireContext())
+                            .setMessage(action.value)
+                            .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .show()
+                    }
+                }
+            }
         }
 
     }
@@ -105,10 +117,11 @@ class GalleryFragment : DialogFragment() {
         _binding = null
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerView(twoPane: Boolean) {
+        val grid = if (twoPane) { 10 } else { 4 }
         binding.galleryRecyclerview.apply {
             adapter = galleryAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = GridLayoutManager(requireContext(),grid)
         }
     }
 

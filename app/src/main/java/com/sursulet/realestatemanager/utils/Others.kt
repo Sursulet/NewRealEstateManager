@@ -1,5 +1,6 @@
 package com.sursulet.realestatemanager.utils
 
+import android.util.Log
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import java.text.DecimalFormat

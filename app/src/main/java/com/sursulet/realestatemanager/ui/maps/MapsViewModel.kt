@@ -1,12 +1,12 @@
 package com.sursulet.realestatemanager.ui.maps
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.sursulet.realestatemanager.di.IoDispatcher
 import com.sursulet.realestatemanager.repository.GeocoderRepository
 import com.sursulet.realestatemanager.repository.RealEstateRepository
-import com.sursulet.realestatemanager.utils.Others.getRadius
 import com.sursulet.realestatemanager.utils.awaitLastLocation
 import com.sursulet.realestatemanager.utils.locationFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,14 +34,11 @@ class MapsViewModel @Inject constructor(
     val navigation = _errorMessage.receiveAsFlow()
         .shareIn(viewModelScope.plus(dispatcher), SharingStarted.WhileSubscribed())
 
-    private val lastLocation = client.locationFlow()
-        .conflate()
-        .catch { e ->
-            _errorMessage.trySend("Unable to get location")
-        }.shareIn(viewModelScope.plus(dispatcher), SharingStarted.WhileSubscribed())
-
-    //MutableStateFlow<LatLng>(LatLng(0.0,0.0))
-    private val radius = MutableStateFlow(39135.8)
+    init {
+        viewModelScope.launch {
+            val response = geocoderRepository.getCoordinates("1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA")
+        }
+    }
 
     /*
     init {
@@ -80,8 +77,6 @@ class MapsViewModel @Inject constructor(
             MapsEvent.StartUpdatingLocation -> { startUpdatingLocation() }
             is MapsEvent.Zoom -> { _uiState.update { it.copy(zoomLvl = event.value) } }
         }
-        //_uiState.update { it.copy(zoomLvl = 11f) }
-        radius.value = getRadius(10f)
     }
 
     private fun getLastKnownLocation() = viewModelScope.launch {

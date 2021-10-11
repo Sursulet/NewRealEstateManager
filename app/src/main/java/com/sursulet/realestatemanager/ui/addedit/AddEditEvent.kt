@@ -16,7 +16,7 @@ sealed class AddEditEvent {
     data class Country(val value: String) : AddEditEvent()
     data class Nearest(val value: String) : AddEditEvent()
     data class IsAvailable(val value: Boolean) : AddEditEvent()
-    data class Created(val value: String) : AddEditEvent()
     data class Agent(val value: String) : AddEditEvent()
+    data class NotSave(val value: Boolean) : AddEditEvent()
     object OnSave : AddEditEvent()
 }
