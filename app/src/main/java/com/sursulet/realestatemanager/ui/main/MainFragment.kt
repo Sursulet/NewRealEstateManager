@@ -62,7 +62,7 @@ class MainFragment : Fragment() {
             setFragmentResult("requestKey", bundleOf("bundleKey" to it))
         }
 
-        binding.actionCancelSearch.setOnClickListener {
+        binding.mainActionCancelSearch.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setMessage(resources.getString(R.string.supporting_text))
                 .setNeutralButton(resources.getString(R.string.cancel)) { dialog, _ ->
@@ -77,7 +77,7 @@ class MainFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
                 list.submitList(state.list)
-                binding.actionCancelSearch.visibility =
+                binding.mainActionCancelSearch.visibility =
                     if (state.searchQuery != SearchQuery()) View.VISIBLE else View.GONE
             }
         }
@@ -89,7 +89,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.mainRecyclerview.apply {
+        binding.mainList.apply {
             adapter = list
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(DividerItemDecoration(requireContext(),LinearLayoutManager.VERTICAL))

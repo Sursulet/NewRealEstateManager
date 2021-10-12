@@ -17,7 +17,7 @@ class GalleryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = GalleryActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.toolbar.setNavigationOnClickListener { finish() }
+        binding.galleryToolbar.setNavigationOnClickListener { finish() }
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.gallery_container, GalleryFragment.newInstance())

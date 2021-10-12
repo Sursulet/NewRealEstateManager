@@ -19,7 +19,7 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DetailActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.toolbar.setNavigationOnClickListener { finish() }
+        binding.detailToolbar.setNavigationOnClickListener { finish() }
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.detail_container, DetailFragment.newInstance())

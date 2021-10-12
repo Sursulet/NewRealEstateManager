@@ -16,7 +16,7 @@ class SearchActivity : AppCompatActivity() {
         binding = SearchActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.toolbar.setNavigationOnClickListener { finish() }
+        binding.searchToolbar.setNavigationOnClickListener { finish() }
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()

@@ -100,7 +100,7 @@ class AddEditFragment : Fragment() {
                         bundleOf("bundleAddEditKey" to state.title)
                     )
 
-                    addEditAddPhotos.setOnClickListener { viewModel.onEvent(AddEditEvent.OnSave) }
+                    addEditActionAddPhotos.setOnClickListener { viewModel.onEvent(AddEditEvent.OnSave) }
                     addEditIsAvailable.isChecked = state.isAvailable
                     addEditIsAvailable.text =
                         if (state.created.isNotBlank()) {

@@ -15,9 +15,9 @@ class LoanActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = LoanActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.loanToolbar)
 
-        binding.toolbar.setNavigationOnClickListener { finish() }
+        binding.loanToolbar.setNavigationOnClickListener { finish() }
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()

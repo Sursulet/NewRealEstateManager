@@ -17,7 +17,7 @@ class AddEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = AddEditActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.toolbar.setNavigationOnClickListener { finish() }
+        binding.addEditToolbar.setNavigationOnClickListener { finish() }
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.add_edit_container, AddEditFragment.newInstance())
@@ -26,7 +26,7 @@ class AddEditActivity : AppCompatActivity() {
 
         supportFragmentManager.setFragmentResultListener("requestAddEditKey", this) { _, bundle ->
             val result = bundle.getString("bundleAddEditKey")
-            binding.toolbar.title = result
+            binding.addEditToolbar.title = result
         }
     }
 }

@@ -19,10 +19,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.RealEstateManager.Transparency">
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
     <style name="Theme.RealEstateManager.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.RealEstateManager.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

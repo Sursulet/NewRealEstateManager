@@ -1,9 +1,9 @@
 package com.sursulet.realestatemanager.ui.maps
 
-import android.location.Location
+import com.google.android.gms.maps.model.LatLng
 
 data class MarkerUiModel(
     val id: Long,
-    val location: Location,
-    val distance: Float
+    val coordinates: LatLng,
+    val distance: Float = 0f
 )

@@ -3,6 +3,8 @@ package com.sursulet.realestatemanager.ui.main
 import com.google.common.truth.Truth.assertThat
 import com.sursulet.realestatemanager.MainCoroutineRule
 import com.sursulet.realestatemanager.repository.NetworkRepository
+import com.sursulet.realestatemanager.repository.shared.RealEstateIdRepository
+import com.sursulet.realestatemanager.repository.shared.TwoPaneRepository
 import io.mockk.every
 import io.mockk.mockkClass
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,12 +22,14 @@ class MainViewModelTest {
     var rule = MainCoroutineRule()
 
     private lateinit var viewModel: MainViewModel
+    private val twoPaneRepository = mockkClass(TwoPaneRepository::class)
     private val networkRepository = mockkClass(NetworkRepository::class)
+    private val realEstateIdRepository = mockkClass(RealEstateIdRepository::class)
 
     @Before
     fun setUp() {
         every { networkRepository.connectivityFlow() } returns flowOf(false)
-        viewModel = MainViewModel(rule.dispatcher, networkRepository)
+        viewModel = MainViewModel(rule.dispatcher, twoPaneRepository, networkRepository, realEstateIdRepository)
     }
 
     @Test
@@ -147,7 +151,7 @@ class MainViewModelTest {
     @Test
     fun `Navigate to MapsActivity when network is connected`() = rule.runBlockingTest {
         every { networkRepository.connectivityFlow() } returns flowOf(true)
-        viewModel = MainViewModel(rule.dispatcher, networkRepository)
+        viewModel = MainViewModel(rule.dispatcher, twoPaneRepository, networkRepository, realEstateIdRepository)
 
         viewModel.onEvent(MainEvent.Maps)
 
@@ -162,7 +166,7 @@ class MainViewModelTest {
     fun `Navigate to MapsFragment from TwoPaneScreen when network is connected`() =
         rule.runBlockingTest {
             every { networkRepository.connectivityFlow() } returns flowOf(true)
-            viewModel = MainViewModel(rule.dispatcher, networkRepository)
+            viewModel = MainViewModel(rule.dispatcher, twoPaneRepository, networkRepository, realEstateIdRepository)
 
             viewModel.onEvent(MainEvent.TwoPaneScreen)
             viewModel.onEvent(MainEvent.Maps)
@@ -178,7 +182,7 @@ class MainViewModelTest {
     fun `Display a error message when network is not connected returns false `() =
         rule.runBlockingTest {
             every { networkRepository.connectivityFlow() } returns flowOf(false)
-            viewModel = MainViewModel(rule.dispatcher, networkRepository)
+            viewModel = MainViewModel(rule.dispatcher, twoPaneRepository, networkRepository, realEstateIdRepository)
 
             viewModel.onEvent(MainEvent.Maps)
 
@@ -193,7 +197,7 @@ class MainViewModelTest {
     fun `Display a error message from TwoPaneScreen when network is not connected returns false `() =
         rule.runBlockingTest {
             every { networkRepository.connectivityFlow() } returns flowOf(false)
-            viewModel = MainViewModel(rule.dispatcher, networkRepository)
+            viewModel = MainViewModel(rule.dispatcher, twoPaneRepository, networkRepository, realEstateIdRepository)
 
             viewModel.onEvent(MainEvent.TwoPaneScreen)
             viewModel.onEvent(MainEvent.Maps)

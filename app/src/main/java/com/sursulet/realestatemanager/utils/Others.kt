@@ -3,6 +3,7 @@ package com.sursulet.realestatemanager.utils
 import android.util.Log
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
+import com.sursulet.realestatemanager.data.local.model.Address
 import java.text.DecimalFormat
 import java.time.LocalDate
 
@@ -11,6 +12,10 @@ object Others {
     fun formattedPrice(price: Double): String {
         val df = DecimalFormat("#.##")
         return df.format(price)
+    }
+
+    fun formattedAddress(address: Address): String = address.let {
+        it.street + if (it.extras.isNotEmpty()) ", ${it.extras}," else ", " + "${it.postCode} ${it.city}" + if (it.state.isNotEmpty()) ", ${it.extras}," else ", " + it.country
     }
 
     fun round(number: Double) = "%.4f".format(number).toDouble() //"%.3f".format(number).toDouble()

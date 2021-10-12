@@ -36,8 +36,13 @@ class MapsViewModelTest {
         bathrooms = 2,
         bedrooms = 1,
         description = "Description",
-        address = Address(street = "", state = "", city = "", postCode = "", country = ""),
-        nearest = null,
+        address = Address(
+            street = "40 Boulevard Haussmann",
+            postCode = "75009",
+            city = "Paris",
+            country = "France"
+        ),
+        nearest = "",
         isAvailable = true,
         agent = "PEACH"
     )
@@ -47,9 +52,6 @@ class MapsViewModelTest {
         every { realEstateRepository.getRealEstates() } returns flowOf(listOf(estate))
         viewModel = MapsViewModel(rule.dispatcher, client, geocoder, realEstateRepository)
     }
-
-    @Test
-    fun `Display error message`() = rule.runBlockingTest { }
 
     @Test
     fun `Display estates when permission`() = rule.runBlockingTest {

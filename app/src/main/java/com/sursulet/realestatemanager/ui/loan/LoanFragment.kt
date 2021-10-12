@@ -37,7 +37,7 @@ class LoanFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            actionCalculate.setOnClickListener { viewModel.onEvent(LoanEvent.Calculate) }
+            loanActionCalculate.setOnClickListener { viewModel.onEvent(LoanEvent.Calculate) }
             loanContribution.editText?.doOnTextChanged { text, _, _, _ ->
                 viewModel.onEvent(LoanEvent.Contribution(text.toString()))
             }

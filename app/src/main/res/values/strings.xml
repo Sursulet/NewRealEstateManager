@@ -20,7 +20,6 @@
 
     <!-- Main -->
     <string name="cancel_search_label">Cancel search</string>
-    <string name="cancel_search_dialog_title">Cancel search</string>
     <string name="supporting_text">Do you want to cancel the search?</string>
     <string name="cancel">Cancel</string>
 
@@ -65,12 +64,10 @@
     <string name="description_label">Description</string>
     <string name="extras_label">Extras</string>
     <string name="agent_label">Agent</string>
-    <string name="search_label">Search</string>
     <string name="price_min_label">Price Min.</string>
     <string name="surface_min_label">Surface Min.</string>
     <string name="price_max_label">Price Max.</string>
     <string name="surface_max_label">Surface Max.</string>
-    <string name="empty_text"> </string>
     <string name="photos_title">Photos</string>
     <string name="un">1</string>
     <string name="two">2</string>
@@ -80,7 +77,6 @@
 
     <!-- Permission -->
     <string name="permission_granted">Permission granted</string>
-    <string name="permission_denied">Permission denied</string>
     <string name="permission_required">Permission required</string>
     <string name="ok">OK</string>
     <string name="street_label">Street</string>

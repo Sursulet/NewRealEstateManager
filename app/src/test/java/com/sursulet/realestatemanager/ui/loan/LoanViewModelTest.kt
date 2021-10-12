@@ -19,7 +19,7 @@ class LoanViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = LoanViewModel(rule.dispatcher)
+        viewModel = LoanViewModel()
     }
 
     @Test

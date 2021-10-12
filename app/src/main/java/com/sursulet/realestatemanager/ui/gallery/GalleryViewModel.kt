@@ -61,7 +61,10 @@ class GalleryViewModel @Inject constructor(
             }
             GalleryEvent.OnSave -> {
                 if (uiState.value.photos.isEmpty()) _navigation.trySend(GalleryNavigation.EmptyGallery())
-                else _navigation.trySend(GalleryNavigation.CloseFragment)
+                else {
+                    if (uiState.value.isTwoPane) _navigation.trySend(GalleryNavigation.CloseFragment)
+                    else _navigation.trySend(GalleryNavigation.CloseActivity)
+                }
             }
         }
     }

@@ -89,8 +89,12 @@ class MapsFragment : Fragment() {
                     map.clear()
 
                     val lastLocation = state.lastLocation.let { LatLng(it.latitude, it.longitude) }
-                    map.addMarker(MarkerOptions().position(lastLocation))
+                    //map.addMarker(MarkerOptions().position(lastLocation))
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, state.zoomLvl))
+
+                    state.markers.map { marker ->
+                        map.addMarker(MarkerOptions().position(marker.coordinates))
+                    }
                 }
             }
         }

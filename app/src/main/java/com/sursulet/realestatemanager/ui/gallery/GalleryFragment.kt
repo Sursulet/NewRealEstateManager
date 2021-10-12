@@ -48,10 +48,8 @@ class GalleryFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         binding.apply {
-            toolbar.apply {
+            galleryToolbar.apply {
                 setNavigationOnClickListener { viewModel.onEvent(GalleryEvent.OnClose) }
                 title = "Gallery"
                 inflateMenu(R.menu.save_menu)
@@ -82,6 +80,9 @@ class GalleryFragment : DialogFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.navigation.collect { action ->
                 when (action) {
+                    GalleryNavigation.CloseActivity -> {
+                        requireActivity().finish()
+                    }
                     GalleryNavigation.CloseFragment -> {
                         setFragmentResult("isSaveRequest", bundleOf("isSaveBundle" to true))
                         dismiss()
@@ -119,7 +120,7 @@ class GalleryFragment : DialogFragment() {
 
     private fun setupRecyclerView(twoPane: Boolean) {
         val grid = if (twoPane) { 10 } else { 4 }
-        binding.galleryRecyclerview.apply {
+        binding.galleryList.apply {
             adapter = galleryAdapter
             layoutManager = GridLayoutManager(requireContext(),grid)
         }

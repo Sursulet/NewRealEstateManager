@@ -110,11 +110,6 @@ class SearchViewModel @Inject constructor(
             if (uiState.value.unitTime.isBlank() && uiState.value.nbTime.isBlank()) LocalDate.parse("1970-01-01")
             else calculatePeriod(uiState.value.nbTime.toLong(), uiState.value.unitTime)
 
-        var created = LocalDate.parse("1970-01-01")
-        var sold: LocalDate? = null
-
-        if (uiState.value.available.not()) created = period else sold = period
-
         val newSearchQuery = SearchQuery(
             type = uiState.value.type,
             zone = uiState.value.city,
@@ -145,7 +140,7 @@ class SearchViewModel @Inject constructor(
         }
         if (period.isNotBlank() && number.isNotBlank()) {
             val date = calculatePeriod(number = number.toLong(), time = period)
-            _uiState.update { it.copy(phrase = if (available) " Properties available since $date" else "Property sold since $date") }
+            _uiState.update { it.copy(phrase = if (available) "Properties available since $date" else "Property sold since $date") }
         }
     }
 }

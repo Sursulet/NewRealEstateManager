@@ -49,7 +49,7 @@ class PhotoDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            toolbar.apply {
+            photoDialogToolbar.apply {
                 setNavigationOnClickListener { dismiss() }
                 title = "Add Photo"
                 inflateMenu(R.menu.save_menu)
@@ -63,7 +63,7 @@ class PhotoDialogFragment : DialogFragment() {
             actionTakeAPhoto.setOnClickListener { takePhoto.launch() }
             actionPickAPhoto.setOnClickListener { getContent.launch("image/*") }
 
-            photoTitle.editText?.doOnTextChanged { text, _, _, _ ->
+            photoDialogTitle.editText?.doOnTextChanged { text, _, _, _ ->
                 viewModel.onEvent(PhotoEvent.Title(text.toString()))
             }
         }
@@ -79,10 +79,10 @@ class PhotoDialogFragment : DialogFragment() {
             viewModel.uiState.collect { state ->
                 binding.apply {
                     glide.load(state.image).centerCrop().into(photoImage)
-                    if (state.title != photoTitle.editText?.text.toString()) {
-                        photoTitle.editText?.setText(state.title)
+                    if (state.title != photoDialogTitle.editText?.text.toString()) {
+                        photoDialogTitle.editText?.setText(state.title)
                     }
-                    photoTitle.error = state.errorTitle
+                    photoDialogTitle.error = state.errorTitle
                 }
             }
         }

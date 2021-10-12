@@ -59,7 +59,6 @@ class AddEditViewModelTest {
             assertThat(result.error.description).isEqualTo("You must enter a description")
             assertThat(result.error.street).isEqualTo("You must enter a street")
             assertThat(result.error.city).isEqualTo("You must enter a city")
-            assertThat(result.error.state).isEqualTo("You must enter a state")
             assertThat(result.error.postCode).isEqualTo("You must enter a post code")
             assertThat(result.error.country).isEqualTo("You must enter a country")
             assertThat(result.error.agent).isEqualTo("You must enter a agent")
@@ -69,20 +68,16 @@ class AddEditViewModelTest {
     fun `insert Real Estate with empty fields returns error messages in Edit Mode`() =
         rule.runBlockingTest {
             val estate = RealEstate(
-                1,
-                "",
-                123000000.0f,
-                690.0,
+                id = 1,
+                type = "",
+                price = 123000000.0f,
+                surface = 690.0,
                 rooms = 7,
-                0,
-                0,
-                "",
-                Address(street = "", null, "", "", "", "France"),
-                null,
-                true,
-                LocalDate.now(),
-                null,
-                "Peach"
+                description = "",
+                address = Address(street = "", postCode = "", city = "", country = "France"),
+                isAvailable = true,
+                created = LocalDate.now(),
+                agent= "Peach"
             )
 
             every { idRepository.realEstateId } returns MutableStateFlow(1)
@@ -106,7 +101,6 @@ class AddEditViewModelTest {
             assertThat(result.error.description).isEqualTo("You must enter a description")
             assertThat(result.error.street).isEqualTo("You must enter a street")
             assertThat(result.error.city).isEqualTo("You must enter a city")
-            assertThat(result.error.state).isEqualTo("You must enter a state")
             assertThat(result.error.postCode).isEqualTo("You must enter a post code")
             assertThat(result.error.price).isEqualTo(null)
             assertThat(result.error.surface).isEqualTo(null)

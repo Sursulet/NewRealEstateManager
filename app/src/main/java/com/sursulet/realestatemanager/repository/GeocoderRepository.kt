@@ -17,9 +17,9 @@ class GeocoderRepository @Inject constructor(
             if (response.isSuccessful) {
                 response.body()?.let {
                     return@let Resource.success(it)
-                } ?: Resource.error("An unknow error occured", null)
+                } ?: Resource.error("An unknown error occurred", null)
             } else {
-                Resource.error("An unknow error occured", null)
+                Resource.error("An unknown error occurred", null)
             }
         } catch (e: Exception) {
             Resource.error("Couldn't reach the server. Check your internet connection.", null)
