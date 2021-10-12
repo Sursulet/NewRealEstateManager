@@ -46,7 +46,7 @@ class AddEditViewModel @Inject constructor(
                         estate = state.estate,
                         title = "Edit Real Estate",
                         type = state.estate?.type ?: "",
-                        price = state.estate?.price.toString(),
+                        price = state.estate?.price.toString().format("###"),
                         surface = state.estate?.surface.toString(),
                         rooms = state.estate?.rooms.toString(),
                         bathrooms = state.estate?.bathrooms?.toString() ?: "",
@@ -63,6 +63,7 @@ class AddEditViewModel @Inject constructor(
                         created = state.estate?.created.toString(),
                         sold = state.estate?.sold.toString(),
                         agent = state.estate?.agent.toString(),
+                        isSave = true
                     )
                 }
             }
@@ -90,33 +91,54 @@ class AddEditViewModel @Inject constructor(
             is AddEditEvent.NotSave -> {
                 _uiState.update { it.copy(isSave = event.value) }
                 if (event.value) {
-                    if (uiState.value.isTwoPane) { _navigation.trySend(AddEditNavigation.DetailActivity) }
-                    else { _navigation.trySend(AddEditNavigation.DetailFragment) }
+                    if (uiState.value.isTwoPane) { _navigation.trySend(AddEditNavigation.DetailFragment) }
+                    else { _navigation.trySend(AddEditNavigation.DetailActivity) }
                 }
+            }
+            AddEditEvent.AddPhotos -> {
+                validate()
+                if (uiState.value.error != AddEditError(null, null, null, null, null, null, null, null, null, null)) return
+                save()
+                _navigation.trySend(AddEditNavigation.GalleryDialogFragment)
             }
             AddEditEvent.OnSave -> {
-                _uiState.update {
-                    it.copy(
-                        error = it.error.copy(
-                            type = if (it.type.isBlank()) "You must enter a type" else null,
-                            price = if (it.price.isBlank()) "You must enter a price" else null,
-                            surface = if (uiState.value.price.isBlank()) "You must enter a surface" else null,
-                            rooms = if (uiState.value.rooms.isBlank()) "You must enter a rooms" else null,
-                            description = if (uiState.value.description.isBlank()) "You must enter a description" else null,
-                            street = if (uiState.value.street.isBlank()) "You must enter a street" else null,
-                            city = if (uiState.value.city.isBlank()) "You must enter a city" else null,
-                            postCode = if (uiState.value.postCode.isBlank()) "You must enter a post code" else null,
-                            country = if (uiState.value.country.isBlank()) "You must enter a country" else null,
-                            agent = if (uiState.value.agent.isBlank()) "You must enter a agent" else null
-                        )
-                    )
-                }
+                validate()
 
                 if (uiState.value.error != AddEditError(null, null, null, null, null, null, null, null, null, null)) return
-
                 save()
+
+                if (!uiState.value.isSave) {
+                    _navigation.trySend(AddEditNavigation.Message("Add least a photo"))
+                    return
+                } else {
+                    if (uiState.value.isTwoPane) {
+                        _navigation.trySend(AddEditNavigation.DetailFragment)
+                    } else {
+                        _navigation.trySend(AddEditNavigation.DetailActivity)
+                    }
+                }
             }
         }
+    }
+
+    private fun validate() {
+        _uiState.update {
+            it.copy(
+                error = it.error.copy(
+                    type = if (it.type.isBlank()) "You must enter a type" else null,
+                    price = if (it.price.isBlank()) "You must enter a price" else null,
+                    surface = if (uiState.value.price.isBlank()) "You must enter a surface" else null,
+                    rooms = if (uiState.value.rooms.isBlank()) "You must enter a rooms" else null,
+                    description = if (uiState.value.description.isBlank()) "You must enter a description" else null,
+                    street = if (uiState.value.street.isBlank()) "You must enter a street" else null,
+                    city = if (uiState.value.city.isBlank()) "You must enter a city" else null,
+                    postCode = if (uiState.value.postCode.isBlank()) "You must enter a post code" else null,
+                    country = if (uiState.value.country.isBlank()) "You must enter a country" else null,
+                    agent = if (uiState.value.agent.isBlank()) "You must enter a agent" else null
+                )
+            )
+        }
+
     }
 
     private fun save() {
@@ -138,6 +160,7 @@ class AddEditViewModel @Inject constructor(
                     postCode = uiState.value.postCode,
                     country = uiState.value.country
                 ),
+                isAvailable = uiState.value.isAvailable,
                 created = LocalDate.parse(uiState.value.created),
                 sold = if (uiState.value.isAvailable) null else LocalDate.now(),
                 agent = uiState.value.agent
@@ -162,14 +185,13 @@ class AddEditViewModel @Inject constructor(
                     postCode = uiState.value.postCode,
                     country = uiState.value.country
                 ),
+                isAvailable = uiState.value.isAvailable,
                 sold = if (uiState.value.isAvailable) null else LocalDate.now(),
                 nearest = uiState.value.extras,
                 agent = uiState.value.agent
             )
             createRealEstate(newRealEstate)
         }
-
-        _navigation.trySend(AddEditNavigation.GalleryDialogFragment)
     }
 
     private fun createRealEstate(realEstate: RealEstate) = viewModelScope.launch(dispatcher) {

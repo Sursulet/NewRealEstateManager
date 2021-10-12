@@ -1,5 +1,6 @@
 package com.sursulet.realestatemanager.ui.addedit
 
+import android.view.View
 import com.sursulet.realestatemanager.data.local.model.RealEstate
 
 data class AddEditState(
@@ -25,5 +26,6 @@ data class AddEditState(
     val sold: String = "",
     val agent: String = "",
     val isSave: Boolean = false,
+    val saveBtn: Int = View.GONE,
     val error: AddEditError = AddEditError()
 )

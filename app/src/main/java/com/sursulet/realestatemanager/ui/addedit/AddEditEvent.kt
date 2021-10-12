@@ -18,5 +18,6 @@ sealed class AddEditEvent {
     data class IsAvailable(val value: Boolean) : AddEditEvent()
     data class Agent(val value: String) : AddEditEvent()
     data class NotSave(val value: Boolean) : AddEditEvent()
+    object AddPhotos : AddEditEvent()
     object OnSave : AddEditEvent()
 }

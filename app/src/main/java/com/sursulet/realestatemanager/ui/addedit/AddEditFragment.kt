@@ -1,9 +1,11 @@
 package com.sursulet.realestatemanager.ui.addedit
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -95,12 +97,11 @@ class AddEditFragment : Fragment() {
             viewModel.uiState.collect { state ->
                 binding.apply {
 
-                    setFragmentResult(
-                        "requestAddEditKey",
-                        bundleOf("bundleAddEditKey" to state.title)
-                    )
+                    setFragmentResult("requestAddEditKey", bundleOf("bundleAddEditKey" to state.title))
+                    if (state.estate != null) addEditSave.visibility = View.VISIBLE
 
-                    addEditActionAddPhotos.setOnClickListener { viewModel.onEvent(AddEditEvent.OnSave) }
+                    addEditSave.setOnClickListener { viewModel.onEvent(AddEditEvent.OnSave) }
+                    addEditActionAddPhotos.setOnClickListener { viewModel.onEvent(AddEditEvent.AddPhotos) }
                     addEditIsAvailable.isChecked = state.isAvailable
                     addEditIsAvailable.text =
                         if (state.created.isNotBlank()) {
@@ -175,6 +176,9 @@ class AddEditFragment : Fragment() {
                     AddEditNavigation.DetailFragment -> {
                         requireActivity().supportFragmentManager.beginTransaction()
                             .remove(this@AddEditFragment).commit()
+                    }
+                    is AddEditNavigation.Message -> {
+                        Toast.makeText(requireContext(), action.value, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
