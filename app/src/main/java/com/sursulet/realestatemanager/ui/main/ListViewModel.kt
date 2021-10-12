@@ -10,6 +10,7 @@ import com.sursulet.realestatemanager.repository.shared.RealEstateIdRepository
 import com.sursulet.realestatemanager.repository.shared.SearchQueryRepository
 import com.sursulet.realestatemanager.ui.adapters.RealEstateUiModel
 import com.sursulet.realestatemanager.ui.search.SearchQuery
+import com.sursulet.realestatemanager.utils.Others.formattedPrice
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,6 +47,7 @@ class ListViewModel @Inject constructor(
                         nearest = query.nearest,
                         size = query.nbPhotos
                     )
+
                     _uiState.update { it.copy(searchQuery = query) }
                     search
 
@@ -64,7 +66,7 @@ class ListViewModel @Inject constructor(
                         it.photos[0].image,
                         it.realEstate.address.city,
                         it.realEstate.type,
-                        it.realEstate.price.toString()
+                        formattedPrice(it.realEstate.price)
                     )
                 }
             }.collect { state ->

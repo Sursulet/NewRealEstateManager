@@ -1,9 +1,7 @@
 package com.sursulet.realestatemanager.ui.loan
 
 import androidx.lifecycle.ViewModel
-import com.sursulet.realestatemanager.di.IoDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -50,10 +48,9 @@ class LoanViewModel @Inject constructor() : ViewModel() {
         val result: Double
         uiState.value.apply {
             result = contribution.toDouble()*(rate.toDouble()*(1+rate.toDouble()).pow(years.toInt())) / ((1+rate.toDouble()).pow(years.toInt())-1)
-                //(contribution.toDouble() * rate.toDouble() / 12) / (1 - (1 + rate.toDouble() / 12).pow(-12 * years.toDouble()))
         }
 
-        val resultString = "%.2f".format(result) //round(result)
+        val resultString = "%.2f".format(result)
         _uiState.update { it.copy(result = "$ $resultString per month") }
     }
 }

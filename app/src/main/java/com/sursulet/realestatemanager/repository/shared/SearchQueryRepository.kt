@@ -1,7 +1,6 @@
 package com.sursulet.realestatemanager.repository.shared
 
 import com.sursulet.realestatemanager.ui.search.SearchQuery
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject

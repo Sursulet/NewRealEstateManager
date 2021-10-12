@@ -1,6 +1,6 @@
 package com.sursulet.realestatemanager.ui.detail
 
-import com.sursulet.realestatemanager.data.geocoder.responses.Location
+import com.google.android.gms.maps.model.LatLng
 import com.sursulet.realestatemanager.ui.adapters.PhotoUiModel
 
 data class DetailState(
@@ -12,5 +12,5 @@ data class DetailState(
     val bathrooms: String = "",
     val bedrooms: String = "",
     val location: String = "",
-    val coordinates: Location? = null//Location(48.866667,2.333333)
+    val coordinates: LatLng? = null//Location(48.866667,2.333333)
 )

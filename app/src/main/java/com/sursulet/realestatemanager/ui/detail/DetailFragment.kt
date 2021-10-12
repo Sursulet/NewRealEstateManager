@@ -5,9 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.MarkerOptions
+import com.sursulet.realestatemanager.R
 import com.sursulet.realestatemanager.databinding.DetailFragmentBinding
 import com.sursulet.realestatemanager.ui.adapters.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +36,7 @@ class DetailFragment : Fragment() {
 
     @Inject
     lateinit var galleryAdapter: PhotoAdapter
+    private var map: GoogleMap?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +49,14 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        viewLifecycleOwner.lifecycleScope.launch { 
+
+        childFragmentManager.commit {
+            val fragment = SupportMapFragment()
+            fragment.getMapAsync { googleMap -> map = googleMap }
+            replace(R.id.detail_map, fragment, null)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
 
                 galleryAdapter.submitList(state.media)
@@ -54,6 +68,13 @@ class DetailFragment : Fragment() {
                     detailBedrooms.text = state.bedrooms
                     detailSurface.text = state.surface
                     detailLocation.text = state.location
+                }
+
+                map?.let { map ->
+                    state.coordinates?.let {
+                        map.addMarker(MarkerOptions().position(it))
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 12f))
+                    }
                 }
             }
         }
@@ -67,7 +88,8 @@ class DetailFragment : Fragment() {
     private fun setupRecyclerView() {
         binding.detailMedia.apply {
             adapter = galleryAdapter
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
     }
 

@@ -183,6 +183,7 @@
                 tools:text="740 Park Avenue \n Apt 6/7A \n New York \n NY 10021 \n United States" />
 
             <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/detail_map"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
                 android:layout_marginTop="@dimen/default_margin"

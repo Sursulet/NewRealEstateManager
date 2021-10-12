@@ -2,12 +2,13 @@ package com.sursulet.realestatemanager.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sursulet.realestatemanager.data.geocoder.responses.Location
+import com.google.android.gms.maps.model.LatLng
 import com.sursulet.realestatemanager.di.IoDispatcher
 import com.sursulet.realestatemanager.repository.GeocoderRepository
 import com.sursulet.realestatemanager.repository.RealEstateRepository
 import com.sursulet.realestatemanager.repository.shared.RealEstateIdRepository
 import com.sursulet.realestatemanager.ui.adapters.PhotoUiModel
+import com.sursulet.realestatemanager.utils.Others.formattedAddress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,7 +39,8 @@ class DetailViewModel @Inject constructor(
             realEstateIdRepository.realEstateId.filterNotNull().flatMapLatest {
                 realEstateRepository.getRealEstateWithPhotos(it)
             }.collect { estate ->
-                val addressString = estate.realEstate.address.let { "${it.street}, ${it.postCode} ${it.city}, ${it.country}" }
+                val address = formattedAddress(estate.realEstate.address)
+
                 _uiState.update { state ->
                     state.copy(
                         media= estate.photos.map { PhotoUiModel(it.id,it.title,it.image) },
@@ -48,8 +50,8 @@ class DetailViewModel @Inject constructor(
                         rooms = estate.realEstate.rooms.toString(),
                         bathrooms = estate.realEstate.bathrooms?.toString() ?: "",
                         bedrooms = estate.realEstate.bedrooms?.toString() ?: "",
-                        location = addressString,
-                        coordinates = Location(48.866667,2.333333)
+                        location = address,
+                        coordinates = geocoderRepository.getCoordinates(address).data?.results?.first()?.geometry?.location?.let { LatLng(it.lat,it.lng) }
                     )
                 }
 

@@ -29,6 +29,7 @@ class MainViewModelTest {
     @Before
     fun setUp() {
         every { networkRepository.connectivityFlow() } returns flowOf(false)
+        every { twoPaneRepository.setValue(true) } returns Unit
         viewModel = MainViewModel(rule.dispatcher, twoPaneRepository, networkRepository, realEstateIdRepository)
     }
 
@@ -56,6 +57,7 @@ class MainViewModelTest {
 
     @Test
     fun `Navigate to AddActivity when click on Add`() = rule.runBlockingTest {
+        every { realEstateIdRepository.setValue(null) } returns Unit
 
         viewModel.onEvent(MainEvent.Add)
 
@@ -68,6 +70,7 @@ class MainViewModelTest {
 
     @Test
     fun `Navigate to AddFragment from TwoPaneScreen when click on Add`() = rule.runBlockingTest {
+        every { realEstateIdRepository.setValue(null) } returns Unit
 
         viewModel.onEvent(MainEvent.TwoPaneScreen)
         viewModel.onEvent(MainEvent.Add)

@@ -1,6 +1,5 @@
 package com.sursulet.realestatemanager.utils
 
-import android.util.Log
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import com.sursulet.realestatemanager.data.local.model.Address
@@ -9,8 +8,8 @@ import java.time.LocalDate
 
 object Others {
 
-    fun formattedPrice(price: Double): String {
-        val df = DecimalFormat("#.##")
+    fun formattedPrice(price: Float): String {
+        val df = DecimalFormat("###,###,###")
         return df.format(price)
     }
 

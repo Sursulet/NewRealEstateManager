@@ -69,7 +69,7 @@ class AddEditViewModelTest {
         rule.runBlockingTest {
             val estate = RealEstate(
                 id = 1,
-                type = "",
+                type = "Flat",
                 price = 123000000.0f,
                 surface = 690.0,
                 rooms = 7,
@@ -80,9 +80,9 @@ class AddEditViewModelTest {
                 agent= "Peach"
             )
 
+            every { twoPaneRepository.twoPane } returns MutableStateFlow(false)
             every { idRepository.realEstateId } returns MutableStateFlow(1)
             every { realEstateRepository.getRealEstate(any()) } returns flowOf(estate)
-            every { twoPaneRepository.twoPane } returns MutableStateFlow(false)
 
             viewModel = AddEditViewModel(
                 dispatcher = rule.dispatcher,
@@ -91,6 +91,10 @@ class AddEditViewModelTest {
                 realEstateRepository = realEstateRepository
             )
 
+            viewModel.onEvent(AddEditEvent.Type(""))
+            viewModel.onEvent(AddEditEvent.Rooms(""))
+            viewModel.onEvent(AddEditEvent.Country(""))
+            viewModel.onEvent(AddEditEvent.Agent(""))
             viewModel.onEvent(AddEditEvent.OnSave)
 
             val result = viewModel.uiState.value

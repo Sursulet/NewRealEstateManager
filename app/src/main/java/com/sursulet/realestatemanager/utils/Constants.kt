@@ -5,5 +5,4 @@ object Constants {
     const val DATABASE_NAME = "real_estate_manager_db"
     const val BASE_URL = "https://maps.googleapis.com/"
     val PERIODS = listOf("days", "weeks", "month", "years", "")
-    const val TAG = "PEACH"
 }
