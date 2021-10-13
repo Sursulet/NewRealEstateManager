@@ -3,11 +3,14 @@ package com.sursulet.realestatemanager.ui.addedit
 import com.google.common.truth.Truth.assertThat
 import com.sursulet.realestatemanager.MainCoroutineRule
 import com.sursulet.realestatemanager.data.local.model.Address
+import com.sursulet.realestatemanager.data.local.model.Photo
 import com.sursulet.realestatemanager.data.local.model.RealEstate
+import com.sursulet.realestatemanager.data.local.model.RealEstateWithPhotos
 import com.sursulet.realestatemanager.repository.RealEstateRepository
 import com.sursulet.realestatemanager.repository.shared.RealEstateIdRepository
 import com.sursulet.realestatemanager.repository.shared.TwoPaneRepository
 import io.mockk.every
+import io.mockk.mockk
 import io.mockk.mockkClass
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +39,7 @@ class AddEditViewModelTest {
     fun `insert Real Estate with empty fields returns error messages in Add Mode`() =
         rule.runBlockingTest {
             every { idRepository.realEstateId } returns MutableStateFlow(null)
-            every { realEstateRepository.getRealEstate(any()) } returns flowOf()
+            every { realEstateRepository.getRealEstateWithPhotos(any()) } returns flowOf()
             every { twoPaneRepository.twoPane } returns MutableStateFlow(false)
 
             viewModel = AddEditViewModel(
@@ -80,9 +83,11 @@ class AddEditViewModelTest {
                 agent= "Peach"
             )
 
+            val photos = listOf<Photo>(Photo(id=1,title = "Kitchen", image = mockk(), realEstateId = 1))
+
             every { twoPaneRepository.twoPane } returns MutableStateFlow(false)
             every { idRepository.realEstateId } returns MutableStateFlow(1)
-            every { realEstateRepository.getRealEstate(any()) } returns flowOf(estate)
+            every { realEstateRepository.getRealEstateWithPhotos(any()) } returns flowOf(RealEstateWithPhotos(estate,photos))
 
             viewModel = AddEditViewModel(
                 dispatcher = rule.dispatcher,

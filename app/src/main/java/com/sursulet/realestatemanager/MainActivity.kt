@@ -85,7 +85,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                //item.isChecked = true
                 drawerLayout.closeDrawer(GravityCompat.START)
                 true
             }

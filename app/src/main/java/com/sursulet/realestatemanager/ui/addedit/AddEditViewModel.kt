@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sursulet.realestatemanager.data.local.model.Address
 import com.sursulet.realestatemanager.data.local.model.RealEstate
+import com.sursulet.realestatemanager.data.local.model.RealEstateWithPhotos
 import com.sursulet.realestatemanager.di.IoDispatcher
 import com.sursulet.realestatemanager.repository.RealEstateRepository
 import com.sursulet.realestatemanager.repository.shared.RealEstateIdRepository
@@ -37,9 +38,13 @@ class AddEditViewModel @Inject constructor(
     init {
         viewModelScope.launch(dispatcher) {
             realEstateIdRepository.realEstateId.filterNotNull().flatMapLatest { id ->
-                realEstateRepository.getRealEstate(id)
-            }.combine(twoPaneRepository.twoPane) { estate: RealEstate, twoPane: Boolean ->
-                AddEditState(isTwoPane = twoPane, estate = estate)
+                realEstateRepository.getRealEstateWithPhotos(id)
+            }.combine(twoPaneRepository.twoPane) { estate: RealEstateWithPhotos, twoPane: Boolean ->
+                AddEditState(
+                    isTwoPane = twoPane,
+                    estate = estate.realEstate,
+                    photos = estate.photos
+                )
             }.collect { state ->
                 _uiState.update {
                     it.copy(
@@ -63,7 +68,7 @@ class AddEditViewModel @Inject constructor(
                         created = state.estate?.created.toString(),
                         sold = state.estate?.sold.toString(),
                         agent = state.estate?.agent.toString(),
-                        isSave = true
+                        isTwoPane = state.isTwoPane
                     )
                 }
             }
@@ -72,42 +77,100 @@ class AddEditViewModel @Inject constructor(
 
     fun onEvent(event: AddEditEvent) {
         when (event) {
-            is AddEditEvent.IsAvailable -> { _uiState.update { it.copy(isAvailable = event.value) } }
-            is AddEditEvent.Type -> { _uiState.update { it.copy(type = event.value) } }
-            is AddEditEvent.Price -> { _uiState.update { it.copy(price = event.value) } }
-            is AddEditEvent.Surface -> { _uiState.update { it.copy(surface = event.value) } }
-            is AddEditEvent.Rooms -> { _uiState.update { it.copy(rooms = event.value) } }
-            is AddEditEvent.Bedrooms -> { _uiState.update { it.copy(bedrooms = event.value) } }
-            is AddEditEvent.Bathrooms -> { _uiState.update { it.copy(bathrooms = event.value) } }
-            is AddEditEvent.Description -> { _uiState.update { it.copy(description = event.value) } }
-            is AddEditEvent.Street -> { _uiState.update { it.copy(street = event.value) } }
-            is AddEditEvent.Extras -> { _uiState.update { it.copy(extras = event.value) } }
-            is AddEditEvent.PostCode -> { _uiState.update { it.copy(postCode = event.value) } }
-            is AddEditEvent.City -> { _uiState.update { it.copy(city = event.value) } }
-            is AddEditEvent.State -> { _uiState.update { it.copy(state = event.value) } }
-            is AddEditEvent.Country -> { _uiState.update { it.copy(country = event.value) } }
-            is AddEditEvent.Nearest -> { _uiState.update { it.copy(nearest = event.value) } }
-            is AddEditEvent.Agent -> { _uiState.update { it.copy(agent = event.value) } }
+            is AddEditEvent.IsAvailable -> {
+                _uiState.update { it.copy(isAvailable = event.value) }
+            }
+            is AddEditEvent.Type -> {
+                _uiState.update { it.copy(type = event.value) }
+            }
+            is AddEditEvent.Price -> {
+                _uiState.update { it.copy(price = event.value) }
+            }
+            is AddEditEvent.Surface -> {
+                _uiState.update { it.copy(surface = event.value) }
+            }
+            is AddEditEvent.Rooms -> {
+                _uiState.update { it.copy(rooms = event.value) }
+            }
+            is AddEditEvent.Bedrooms -> {
+                _uiState.update { it.copy(bedrooms = event.value) }
+            }
+            is AddEditEvent.Bathrooms -> {
+                _uiState.update { it.copy(bathrooms = event.value) }
+            }
+            is AddEditEvent.Description -> {
+                _uiState.update { it.copy(description = event.value) }
+            }
+            is AddEditEvent.Street -> {
+                _uiState.update { it.copy(street = event.value) }
+            }
+            is AddEditEvent.Extras -> {
+                _uiState.update { it.copy(extras = event.value) }
+            }
+            is AddEditEvent.PostCode -> {
+                _uiState.update { it.copy(postCode = event.value) }
+            }
+            is AddEditEvent.City -> {
+                _uiState.update { it.copy(city = event.value) }
+            }
+            is AddEditEvent.State -> {
+                _uiState.update { it.copy(state = event.value) }
+            }
+            is AddEditEvent.Country -> {
+                _uiState.update { it.copy(country = event.value) }
+            }
+            is AddEditEvent.Nearest -> {
+                _uiState.update { it.copy(nearest = event.value) }
+            }
+            is AddEditEvent.Agent -> {
+                _uiState.update { it.copy(agent = event.value) }
+            }
             is AddEditEvent.NotSave -> {
-                _uiState.update { it.copy(isSave = event.value) }
                 if (event.value) {
-                    if (uiState.value.isTwoPane) { _navigation.trySend(AddEditNavigation.DetailFragment) }
-                    else { _navigation.trySend(AddEditNavigation.DetailActivity) }
+                    if (uiState.value.isTwoPane) {
+                        _navigation.trySend(AddEditNavigation.DetailFragment)
+                    } else {
+                        _navigation.trySend(AddEditNavigation.DetailActivity)
+                    }
                 }
             }
             AddEditEvent.AddPhotos -> {
                 validate()
-                if (uiState.value.error != AddEditError(null, null, null, null, null, null, null, null, null, null)) return
+                if (uiState.value.error != AddEditError(
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    )
+                ) return
                 save()
                 _navigation.trySend(AddEditNavigation.GalleryDialogFragment)
             }
             AddEditEvent.OnSave -> {
                 validate()
 
-                if (uiState.value.error != AddEditError(null, null, null, null, null, null, null, null, null, null)) return
+                if (uiState.value.error != AddEditError(
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    )
+                ) return
                 save()
 
-                if (!uiState.value.isSave) {
+                if (uiState.value.photos.isEmpty()) {
                     _navigation.trySend(AddEditNavigation.Message("Add least a photo"))
                     return
                 } else {

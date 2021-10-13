@@ -33,8 +33,6 @@ class ListViewModel @Inject constructor(
     init {
         viewModelScope.launch(dispatcher) {
             searchQueryRepository.searchQuery.flatMapLatest { query: SearchQuery ->
-                //if (query != SearchQuery()) {
-
                     val search = realEstateRepository.search(
                         type = query.type,
                         city = query.zone,
@@ -50,15 +48,6 @@ class ListViewModel @Inject constructor(
 
                     _uiState.update { it.copy(searchQuery = query) }
                     search
-
-
-                //} else {
-                    //Log.d(TAG, "ListVM: No Query")
-                    //_uiState.update { it.copy(searchQuery = null) }
-                    //realEstateRepository.getRealEstatesWithPhotos().map { list ->
-                    //    list.filter { it.photos != emptyList<Photo>() }
-                    //}
-                //}
             }.map { estates ->
                 estates.map {
                     RealEstateUiModel(

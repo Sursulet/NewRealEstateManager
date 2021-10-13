@@ -1,7 +1,6 @@
 package com.sursulet.realestatemanager.ui.addedit
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -97,7 +96,10 @@ class AddEditFragment : Fragment() {
             viewModel.uiState.collect { state ->
                 binding.apply {
 
-                    setFragmentResult("requestAddEditKey", bundleOf("bundleAddEditKey" to state.title))
+                    setFragmentResult(
+                        "requestAddEditKey",
+                        bundleOf("bundleAddEditKey" to state.title)
+                    )
                     if (state.estate != null) addEditSave.visibility = View.VISIBLE
 
                     addEditSave.setOnClickListener { viewModel.onEvent(AddEditEvent.OnSave) }

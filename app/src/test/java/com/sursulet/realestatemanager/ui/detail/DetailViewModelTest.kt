@@ -1,8 +1,8 @@
 package com.sursulet.realestatemanager.ui.detail
 
+import com.google.android.gms.maps.model.LatLng
 import com.google.common.truth.Truth.assertThat
 import com.sursulet.realestatemanager.MainCoroutineRule
-import com.sursulet.realestatemanager.data.geocoder.responses.Location
 import com.sursulet.realestatemanager.data.local.model.Address
 import com.sursulet.realestatemanager.data.local.model.Photo
 import com.sursulet.realestatemanager.data.local.model.RealEstate
@@ -60,7 +60,7 @@ class DetailViewModelTest {
                 bathrooms = "1",
                 bedrooms = "1",
                 location = "7 rue Linois, 75015 Paris, France",
-                coordinates = Location(lat = 48.866667, lng = 2.333333)
+                coordinates = LatLng(48.866667, 2.333333)
             )
         )
     }

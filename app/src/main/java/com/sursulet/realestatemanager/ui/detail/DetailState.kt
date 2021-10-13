@@ -12,5 +12,5 @@ data class DetailState(
     val bathrooms: String = "",
     val bedrooms: String = "",
     val location: String = "",
-    val coordinates: LatLng? = null//Location(48.866667,2.333333)
+    val coordinates: LatLng? = null
 )

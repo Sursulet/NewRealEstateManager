@@ -50,7 +50,7 @@ class GalleryFragment : DialogFragment() {
 
         binding.apply {
             galleryToolbar.apply {
-                setNavigationOnClickListener { viewModel.onEvent(GalleryEvent.OnClose) }
+                setNavigationOnClickListener { viewModel.onEvent(GalleryEvent.OnCancel) }
                 title = "Gallery"
                 inflateMenu(R.menu.save_menu)
                 isEnabled = false
@@ -85,11 +85,10 @@ class GalleryFragment : DialogFragment() {
                     }
                     GalleryNavigation.CloseFragment -> {
                         setFragmentResult("isSaveRequest", bundleOf("isSaveBundle" to true))
-                        dismiss()
+                        dialog?.dismiss()
                     }
                     GalleryNavigation.Cancel -> {
-                        setFragmentResult("isSaveRequest", bundleOf("isSaveBundle" to false))
-                        dismiss()
+                        dialog?.dismiss()
                     }
                     is GalleryNavigation.EmptyGallery -> {
                         MaterialAlertDialogBuilder(requireContext())

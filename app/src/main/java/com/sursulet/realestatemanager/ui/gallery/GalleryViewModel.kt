@@ -55,9 +55,8 @@ class GalleryViewModel @Inject constructor(
             is GalleryEvent.OnEdit -> {
                 lastPhotoRepository.setValue(event.photo)
             }
-            is GalleryEvent.OnClose -> {
-                if (uiState.value.photos.isEmpty()) _navigation.trySend(GalleryNavigation.Cancel)
-                else _navigation.trySend(GalleryNavigation.CloseFragment)
+            is GalleryEvent.OnCancel -> {
+                _navigation.trySend(GalleryNavigation.Cancel)
             }
             GalleryEvent.OnSave -> {
                 if (uiState.value.photos.isEmpty()) _navigation.trySend(GalleryNavigation.EmptyGallery())
